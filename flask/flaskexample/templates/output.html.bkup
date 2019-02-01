@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="">
+      <meta name="author" content="">
+
+    <title>HikeAdvisor</title>
+
+    <!-- css -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link href="../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/nivo-lightbox.css" rel="stylesheet" />
+    <link href="../static/css/nivo-lightbox-theme/default/default.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/animations.css" rel="stylesheet" />
+    <link href="../static/css/style.css" rel="stylesheet">
+    <link href="../static/color/default.css" rel="stylesheet">
+    <!-- =======================================================
+    Theme Name: Bocor
+    Theme URL: https://bootstrapmade.com/bocor-bootstrap-template-nice-animation/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+   </head>
+     <body id="page-top" data-spy="scroll" data-target=".navbar-custom">
+       <section class="hero" id="intro">
+         <div class="container">
+           <div class="row">
+             <div class="col-md-12 text-right navicon">
+               <a id="nav-toggle" class="nav_slide_button" href="#"><span></span></a>
+             </div>
+           </div>
+           <div class="row">
+             <div class="col-md-8 col-md-offset-2 text-center inner">
+               <div class="animatedParent">
+                 <h1>HikeAdvisor</h1>
+                   <body>
+                     <p><b><u>Here are your recommendations:</u></b></p>
+                     <p>
+                     {% for hike in top_hikes %}
+                     <p> {{ loop.index }}. {{ hike }} 
+                     <br> 
+                     <font size="2"> Matched hike attributes:
+                     {% for (key, value) in matched_tags_for_hikes[hike].items() %}
+                     {{ key }}: 
+                     {% if key == 'Tags'%}
+                     {% for tag in value %}
+                     {{ tag }}, 
+                     {% endfor %}
+                     {% else %}
+                     {{ value }}, 
+                     {% endif %}
+                     {% endfor %}
+                     </font>
+                     </p> 
+                     {% endfor %}
+                     </p>
+                   </body>
+                 </h1>
+               </div>
+             </div>
+           </div>
+         </div>
+       </section>
+     </body>
+  </html>
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- Core JavaScript Files -->
+  <script src="../static/js/jquery.min.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
+  <script src="../static/js/jquery.sticky.js"></script>
+  <script src="../static/js/jquery.easing.min.js"></script>
+  <script src="../static/js/jquery.scrollTo.js"></script>
+  <script src="../static/js/jquery.appear.js"></script>
+  <script src="../static/js/stellar.js"></script>
+  <script src="../static/js/nivo-lightbox.min.js"></script>
+
+  <script src="../static/js/custom.js"></script>
+  <script src="../static/js/css3-animate-it.js"></script>
+  <script src="../static/contactform/contactform.js"></script>
+  <script>
+  </body>
+</html>

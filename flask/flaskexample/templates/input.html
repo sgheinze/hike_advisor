@@ -1,68 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="icon" href="../../favicon.ico">
 
-  <title>Starter Template for Bootstrap</title>
+  <title>HikeAdvisor</title>
 
-  <!-- Bootstrap core CSS -->
-  <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+  <!-- css -->
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <link href="../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <link href="../static/css/nivo-lightbox.css" rel="stylesheet" />
+  <link href="../static/css/nivo-lightbox-theme/default/default.css" rel="stylesheet" type="text/css" />
+  <link href="../static/css/animations.css" rel="stylesheet" />
+  <link href="../static/css/style.css" rel="stylesheet">
+  <link href="../static/color/default.css" rel="stylesheet">
+  <!-- =======================================================
+    Theme Name: Bocor
+    Theme URL: https://bootstrapmade.com/bocor-bootstrap-template-nice-animation/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+  ======================================================= -->
 
 </head>
+<br>
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
 
-<body>
-
-<div class="container">
-  <h2>HikeAdvisor</h2>
-  <p> In order to give recommendations, we need some information about previous
-  hikes that you've enjoyed.</p>
-    <form id="hikelist" name="hikelist" method='POST' action='/output'>
-    <input type="hidden" name="hikes" id="result" value=""> 
-      <div class="form-group">
-        <label for="sel", id="sel">Please select hike(s) that have sparked joy:</label>
-        <select multiple class="form-control" id="selected-hikes">
-        {% for hike in hike_names %}
-          <option value={{ hike['name'] }}>{{ hike['name'] }}</option>
+  <section class="hero" id="intro">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-right navicon">
+          <a id="nav-toggle" class="nav_slide_button" href="#"><span></span></a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2 text-center inner">
+          <div class="animatedParent">
+            <h1>HikeAdvisor</h1>
+            <p> HikeAdvisor gives recommendations for hikes in California. <br>  Let's get started:
+            </p>
+          </div>
+        </div>
+      </div>
+      <form id="hikelist" name="hikelist" method='POST' action='/output'>
+      <input type="hidden" name="hikes" id="result" value="">
+        <div class="form-group" align="center">
+          <label for="sel", id="sel"> Select hike(s) you have enjoyed in the past:</label>
+          <select multiple class="form-control" id="selected-hikes" style="width:400px">
+          {% for hike in hike_names %}
+            <option value={{ hike['name'] }}>{{ hike['name'] }}</option>
+          {% endfor %}
+          </select>
+        </div>
+          <div align=center>
+      <label for="sel" id="sel"> Select any additional attributes you would like in your hike: </label>
+    </div>
+    <div class="text-center" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+      <input type="hidden" name="hikedifficulty" id="hikedifficulty" value="">
+        <button class="btn btn-default dropdown-toggle" type="button" id="difficultydropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Hike Difficulty <span class="caret"></span></button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="selectedhikedifficulty">
+          <li tabindex="0" id="Easy" onclick="selectDifficulty(this.id)"><a href="#"> Easy </a></li>
+          <li tabindex="0" id="Moderate" onclick="selectDifficulty(this.id)"><a href="#"> Moderate </a></li>
+          <li tabindex="0" id="Hard" onclick="selectDifficulty(this.id)"><a href="#"> Hard </a></li>
+        </ul>
+      </input>
+      </div>
+      <div class="btn-group" role="group">
+      <input type="hidden" name="hikedistance" id="hikedistance" value="">
+        <button class="btn btn-default dropdown-toggle" type="button" id="distancedropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Hike Distance <span class="caret"></span></button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="selectedhikedistance">
+          <li tabindex="0" id="Short" onclick="selectDistance(this.id)"><a href="#">Short</a></li>
+          <li tabindex="0" id="Medium" onclick="selectDistance(this.id)"><a href="#">Medium</a></li>
+          <li tabindex="0"id="Long" onclick="selectDistance(this.id)"><a href="#">Long</a></li>
+        </ul>
+      </input>
+      </div>  
+            <div class="btn-group" role="group">
+      <input type="hidden" name="hikeelevation" id="hikeelevation" value="">
+        <button class="btn btn-default dropdown-toggle" type="button" id="elevationdropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Hike Elevation <span class="caret"></span></button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id=selectedhikeelevation>
+          <li tabindex="0" id="Easy" onclick="selectElevation(this.id)"><a href="#">Easy</a></li>
+          <li tabindex="0" id="Medium" onclick="selectElevation(this.id)"><a href="#">Medium</a></li>
+          <li tabindex="0"id="Hard" onclick="selectElevation(this.id)"><a href="#">Hard</a></li>
+        </ul>
+      </input>
+      </div>
+      <div class="btn-group" role="group">
+      <input type="hidden" name="hiketype" id="hiketype" value="">
+        <button class="btn btn-default dropdown-toggle" type="button" id="typedropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Hike Type <span class="caret"></span></button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id=selectedhiketype>
+          <li tabindex="0" id="Out-and-Back" onclick="selectType(this.id)"><a href="#"> In-and-Out </a></li>
+          <li tabindex="0" id="Point-to-Point" onclick="selectType(this.id)"><a href="#"> Point-to-Point </a></li>
+          <li tabindex="0"id="Loop" onclick="selectType(this.id)"><a href="#"> Loop </a></li>
+        </ul>
+      </input>
+      </div>
+    </div>
+    
+    <div style="line-height:60%;">
+    <br>
+    </div>
+    <input type="hidden" name="tags" id="tags" value="">
+      <div class="form-group" align="center">
+        <select multiple class="form-control" id="selected-tags" style="width:400px">
+        {% for tag in tag_names %}
+          <option value={{ tag['name'] }}>{{ tag['name'] }}</option>
         {% endfor %}
         </select>
       </div>
+    </input>
+    </div>
+    <div style = "text-align: center">
+      <button type="submit" class="btn btn-default btn-lg" onclick="getValues()"> Get recommendations! </button>
+    </div>
+  </form>
+  <br>
+  <br>
+  </section>
 
-      <div>
-        <button type="submit" class="btn btn-default btn-lg" onclick="getValue()">Get my recommendations!</button>
-      </div>
-   </form>
-</div>
+
+  <!-- Core JavaScript Files -->
+  <script src="../static/js/jquery.min.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
+  <script src="../static/js/jquery.sticky.js"></script>
+  <script src="../static/js/jquery.easing.min.js"></script>
+  <script src="../static/js/jquery.scrollTo.js"></script>
+  <script src="../static/js/jquery.appear.js"></script>
+  <script src="../static/js/stellar.js"></script>
+  <script src="../static/js/nivo-lightbox.min.js"></script>
+
+  <script src="../static/js/custom.js"></script>
+  <script src="../static/js/css3-animate-it.js"></script>
+  <script src="../static/contactform/contactform.js"></script>
+  <script>
+
+  function getValues()
+  {
+    var hikes_selected = []
+    var x=document.getElementById("selected-hikes");
+    for (var i = 0; i < x.options.length; i++) {
+    if(x.options[i].selected){
+        hikes_selected.push(x.options[i].text + '||');
+      }
+    }
+    <!----console.log(hikes_selected)------>
+    document.hikelist.hikes.value = hikes_selected;
+
+    var tags_selected = []
+    var x=document.getElementById("selected-tags");
+    for (var i = 0; i < x.options.length; i++) {
+    if(x.options[i].selected){
+        tags_selected.push(x.options[i].text);
+      }
+    }
+    document.hikelist.tags.value = tags_selected
+    console.log(hikes_selected)
+  }
+
+  function selectDifficulty(clicked_id)
+  {
+    var x=document.getElementById("hikedifficulty")
+    var y=document.getElementById("difficultydropdown")
+    x.value = clicked_id
+    y.textContent = 'Difficulty: ' + clicked_id
+  }
+
+  function selectDistance(clicked_id)
+  {
+   var x=document.getElementById("hikedistance")
+   var y=document.getElementById("distancedropdown")
+   x.value = clicked_id
+   y.textContent = 'Distance: ' + clicked_id
+  }
+
+  function selectElevation(clicked_id)
+  {
+   var x=document.getElementById("hikeelevation")
+   var y=document.getElementById("elevationdropdown")
+   x.value = clicked_id
+   y.textContent = 'Elevation: ' + clicked_id
+  }
+
+  function selectType(clicked_id)
+  {
+   var x=document.getElementById("hiketype")
+   var y=document.getElementById("typedropdown")
+   x.value = clicked_id
+   y.textContent = 'Type: ' + clicked_id
+  }
+  </script>
 
 </body>
-
-<script>
-function getValue()
-{
-  var hikes_selected = []
-  var x=document.getElementById("selected-hikes");
-  for (var i = 0; i < x.options.length; i++) {
-  if(x.options[i].selected){
-      hikes_selected.push(x.options[i].text);
-    }
-  }
-  console.log(hikes_selected)
-  document.hikelist.hikes.value = hikes_selected
-  document.forms['hike_list'].submit();
-}
-</script>
-
-</html>
-
-
-  <!-- Bootstrap core JavaScript
-  ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="static/js/bootstrap.min.js"></script>
-  </body>
 </html>
