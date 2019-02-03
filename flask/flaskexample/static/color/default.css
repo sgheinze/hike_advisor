@@ -1,6 +1,6 @@
 a:hover,
 a:focus {
-    color: #3dc9b3;
+    color: #149556;
 }
 
 #navigation {
@@ -8,7 +8,7 @@ a:focus {
 }
 
 a,.tp-caption a.btn:hover {
-	color: #3dc9b3;
+	color: #333;
 }
 .top-nav-collapse {
 	background: #3dc9b3;

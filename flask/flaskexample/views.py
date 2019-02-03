@@ -14,6 +14,9 @@ hike_names = []
 for hike_name in columns:
     hike_names.append({'name': hike_name})
 
+
+hike_urls_locs = pd.read_pickle('flaskexample/Data/hike_url&loc_df.pickle')
+
 # Get list of dictionaries containing all feature names
 feature_matrix = pd.read_pickle('flaskexample/Data/hike_features_190129b')
 drop_columns = ['difficulty_easy', 'difficulty_hard', 'difficulty_moderate',
@@ -65,14 +68,22 @@ def output():
                       hike_elevation=hike_elevation, hike_type=hike_type)
     selected_item_features_embeddings= rec.get_item_feature_embeddings(hike_attributes, item_features_map, 
                                        item_features_embeddings)
-    selected_hike_embeddings = rec.get_item_embeddings(selected_hikes=['Inspiration Point'], item_map=item_map, 
+    selected_hike_embeddings = rec.get_item_embeddings(selected_hikes=selected_hikes, item_map=item_map, 
                                item_embeddings=item_embeddings)
     av_hike_embedding = rec.get_average_item_embedding(selected_item_embeddings=selected_hike_embeddings)
     final_embedding = rec.get_final_embedding(av_item_embedding=av_hike_embedding, 
                       selected_item_features_embeddings=selected_item_features_embeddings)
     sim_scores = rec.calculate_similarities(model, final_embedding, item_embeddings)
     top_hikes = rec.get_top_hikes_by_similarity(sim_scores, item_map, num_hikes=10)
-   
+
+    top_hikes_dict = {}
+    for hike in top_hikes:
+        temp_dict = {}
+        temp_dict['hike_url'] = hike_urls_locs.loc[hike, 'hike_url']
+        temp_dict['location'] = hike_urls_locs.loc[hike, 'location']
+        temp_dict['pic_url'] = hike_urls_locs.loc[hike, 'hike_pic_url']
+        top_hikes_dict[hike] = temp_dict
+  
     matched_tags_for_hikes = {}
     for hike in top_hikes:
         hike_features = rec.get_hike_features(hike, feature_matrix)
@@ -82,6 +93,6 @@ def output():
                                                 hike_type=hike_type, tags=[ tag.capitalize() for tag in tags])
         matched_tags_for_hikes[hike] = matched_tags
      
-    return render_template("output.html", top_hikes=top_hikes, hike_difficulty = hike_difficulty,
+    return render_template("output.html", top_hikes_dict=top_hikes_dict, hike_difficulty = hike_difficulty,
            hike_distance = hike_distance, hike_elevation = hike_elevation, hike_type = hike_type,
            tags = tags, matched_tags_for_hikes = matched_tags_for_hikes)

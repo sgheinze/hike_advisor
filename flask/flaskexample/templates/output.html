@@ -22,6 +22,42 @@
     Author: BootstrapMade
     Author URL: https://bootstrapmade.com
     ======================================================= -->
+
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Create two equal columns that floats next to each other */
+    .column1 {
+      float: left;
+      width: 40%;
+      padding: 0px;
+      height: 125px; /* Should be removed. Only for demonstration */
+    }
+
+    .column2 {
+      float: left;
+      width: 30%;
+      padding: 0px;
+      height: 125px; /* Should be removed. Only for demonstration */
+    }
+  
+     .column3 {
+      float: left;
+      width: 15%;
+      padding: 0px;
+      height: 125px; /* Should be removed. Only for demonstration */
+      align: left;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+   </style>
    </head>
      <body id="page-top" data-spy="scroll" data-target=".navbar-custom">
        <section class="hero" id="intro">
@@ -38,21 +74,31 @@
                    <body>
                      <p><b><u>Here are your recommendations:</u></b></p>
                      <p>
-                     {% for hike in top_hikes %}
-                     <p> {{ loop.index }}. {{ hike }} 
-                     <br> 
-                     <font size="2"> Matched hike attributes:
-                     {% for (key, value) in matched_tags_for_hikes[hike].items() %}
-                     {{ key }} =  
-                     {% if key == 'Tags'%}
-                     {% for tag in value %}
-                     {{ tag }}, 
-                     {% endfor %}
-                     {% else %}
-                     {{ value }}, 
-                     {% endif %}
-                     {% endfor %}
-                     </font>
+                     {% for (hike, attributes) in top_hikes_dict.items() %}
+                     <p>
+                     <div class="row">
+                       <div class="column3"></div>
+                       <div class="column1">
+                         {{ loop.index }}. <a href={{ attributes['hike_url'] }}> {{ hike }} </a> 
+                         <br> ({{ attributes['location']}}) 
+                         <br> 
+                         <font size="2"><u> Matched hike attributes: </u><br>
+                         {% for (key, value) in matched_tags_for_hikes[hike].items() %}
+                         {{ key }} =  
+                         {% if key == 'Tags'%}
+                         {% for tag in value %}
+                         {{ tag }}, 
+                         {% endfor %}
+                         {% else %}
+                         {{ value }}, 
+                         {% endif %}
+                         {% endfor %}
+                         </font>
+                       </div>
+                       <div class="column2">
+                         <img src={{ attributes['pic_url'] }}>
+                       </div>
+                     </div>
                      </p> 
                      {% endfor %}
                      </p>

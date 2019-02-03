@@ -39,11 +39,13 @@
                      <p><b><u>Here are your recommendations:</u></b></p>
                      <p>
                      {% for hike in top_hikes %}
-                     <p> {{ loop.index }}. {{ hike }} 
+                     <p>
+                     {{ loop.index }}. {{ hike }} 
+                     <img src='https://cdn-assets.alltrails.com/uploads/photo/image/11345386/extra_large_fa8eefb8bdabad74d664937fe1edeac4.jpg' width="50" height="50">
                      <br> 
                      <font size="2"> Matched hike attributes:
                      {% for (key, value) in matched_tags_for_hikes[hike].items() %}
-                     {{ key }}: 
+                     {{ key }} =  
                      {% if key == 'Tags'%}
                      {% for tag in value %}
                      {{ tag }}, 
