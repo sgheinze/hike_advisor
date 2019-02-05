@@ -44,55 +44,34 @@ item_embeddings = model.get_item_representations(features=lfm_feature_matrix)[1]
 @app.route('/', methods=['POST', 'GET'])
 @app.route('/input', methods=['POST', 'GET'])
 def index():
-    return render_template("input.html",
-    hike_names = hike_names,
-    tag_names = tag_names)
+    return render_template("input.html", hike_names = hike_names, tag_names = tag_names)
 
 @app.route('/output', methods=['POST', 'GET'])
 def output():
+    
+    # Get input from user
     selected_hikes_text = request.form['hikes']
-    selected_hikes_list = selected_hikes_text.split('||')[:-1]
-    selected_hikes = []
-    for hike in selected_hikes_list:
-         s1 = re.sub('^,', '', hike)
-         s2 = re.sub('$,', '', s1)
-         selected_hikes.append(s2)
-
-    tags = [ tag.lower() for tag in request.form['tags'].split(',') ]
+    selected_hikes = rec.parse_selected_hikes(selected_hikes_text)
     hike_difficulty = request.form['hikedifficulty']
     hike_distance = request.form['hikedistance']
     hike_elevation = request.form['hikeelevation']
     hike_type = request.form['hiketype']
+    tags = [ tag.lower() for tag in request.form['tags'].split(',') ]
 
-    hike_attributes = rec.get_attributes(tags=tags, hike_difficulty=hike_difficulty, hike_distance=hike_distance,
-                      hike_elevation=hike_elevation, hike_type=hike_type)
-    selected_item_features_embeddings= rec.get_item_feature_embeddings(hike_attributes, item_features_map, 
-                                       item_features_embeddings)
-    selected_hike_embeddings = rec.get_item_embeddings(selected_hikes=selected_hikes, item_map=item_map, 
-                               item_embeddings=item_embeddings)
-    av_hike_embedding = rec.get_average_item_embedding(selected_item_embeddings=selected_hike_embeddings)
-    final_embedding = rec.get_final_embedding(av_item_embedding=av_hike_embedding, 
-                      selected_item_features_embeddings=selected_item_features_embeddings)
-    sim_scores = rec.calculate_similarities(model, final_embedding, item_embeddings)
-    top_hikes = rec.get_top_hikes_by_similarity(sim_scores, item_map, num_hikes=10)
+    # Get hike recommendations
+    top_hikes = rec.get_top_hikes(selected_hikes=selected_hikes, hike_difficulty=hike_difficulty, hike_distance=hike_distance, 
+                                  hike_elevation=hike_elevation, hike_type=hike_type, tags=tags, item_embeddings=item_embeddings,
+                                  item_map=item_map, item_features_embeddings=item_features_embeddings, 
+                                  item_features_map=item_features_map, model=model)
 
-    top_hikes_dict = {}
-    for hike in top_hikes:
-        temp_dict = {}
-        temp_dict['hike_url'] = hike_urls_locs.loc[hike, 'hike_url']
-        temp_dict['location'] = hike_urls_locs.loc[hike, 'location']
-        temp_dict['pic_url'] = hike_urls_locs.loc[hike, 'hike_pic_url']
-        top_hikes_dict[hike] = temp_dict
+    # Get hike recommendations AllTrails.com urls, urls for corresponding pictures, and hike locations.
+    top_hikes_dict = rec.get_top_hike_urls(top_hikes=top_hikes, hike_urls_locs=hike_urls_locs)
+
+    # Get matched tags for recommendations based on inputed attributes on webapp.
+    matched_tags_for_hikes = rec.get_matched_tags(top_hikes=top_hikes, hike_difficulty=hike_difficulty, 
+                                                  hike_distance=hike_distance, hike_elevation=hike_elevation,
+                                                  hike_type=hike_type, tags=tags, feature_matrix=feature_matrix)
   
-    matched_tags_for_hikes = {}
-    for hike in top_hikes:
-        hike_features = rec.get_hike_features(hike, feature_matrix)
-        convereted_hike_features = rec.convert_features(hike_features)
-        matched_tags = rec.get_matched_features(convereted_hike_features, hike_difficulty=hike_difficulty, 
-                                                hike_distance=hike_distance, hike_elevation=hike_elevation, 
-                                                hike_type=hike_type, tags=[ tag.capitalize() for tag in tags])
-        matched_tags_for_hikes[hike] = matched_tags
-     
     return render_template("output.html", top_hikes_dict=top_hikes_dict, hike_difficulty = hike_difficulty,
            hike_distance = hike_distance, hike_elevation = hike_elevation, hike_type = hike_type,
            tags = tags, matched_tags_for_hikes = matched_tags_for_hikes)
