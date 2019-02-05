@@ -1,6 +1,6 @@
 # HikeAdvisor
 
-<img src="/figures/hiker_sil.png" alt='blah' width="48" />
+<img src="/figures/hiker_sil.png" alt='blah' width="200" />
 
 Welcome to the GitHub repo for HikeAdvisor, a recommendation system for hikes in California. HikeAdvisor was designed to help new and casual hikers, who often spend hours reading trail descriptions and reviews on websites like AllTrails.com, choose their next hike. The product utilizes hike data from online websites to make personalized hike recommendations to users based on previously enjoyed hikes and desired attributes in future hikes. 
 
